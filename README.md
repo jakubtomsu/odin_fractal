@@ -7,6 +7,6 @@
 - Serpinski carpet (TODO)
 
 ## images
-![GitHub Logo](/mandelbrot.jpg)
-![GitHub Logo](/julia_set.jpg)
-![GitHub Logo](/serpinski_carpet.jpg)
+![](/mandelbrot.jpg)
+![](/julia_set.jpg)
+![](/serpinski_carpet.jpg)
