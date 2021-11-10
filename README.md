@@ -9,4 +9,4 @@
 ## images
 - Mandelbrot set
 ![](/mandelbrot_red.jpg)
-![](/mandelbrot_fowers.jpg)
+![](/mandelbrot_flowers.jpg)
