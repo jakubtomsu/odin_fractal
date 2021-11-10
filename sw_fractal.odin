@@ -13,7 +13,7 @@ DEBUG :: false
 RESOLUTION_X :: 1920
 RESOLUTION_Y :: 1080
 CHANNELS :: 3
-ANTIALIASING :: 3 // samples = ANTIALIASING^2
+ANTIALIASING :: 2 // samples = ANTIALIASING^2
 
 rgb :: [3]u8
 v2 :: [2]f32
@@ -87,36 +87,29 @@ mandelbrot_fill_texture :: proc(iter_max: int, tex: texture) {
 	index: int = 0
 	for y: int = 0; y < tex.y; y += 1 {
 		for x: int = 0; x < tex.x; x += 1 {
-			zoom: f32 = 3.0
-			offset: v2 = {}
-			xy: v2 = {cast(f32)x, cast(f32)y}
-			pos: v2 = offset + (((xy / v2{cast(f32)tex.x, cast(f32)tex.x}) * 2.0) - v2{1.0, 1.0}) * zoom
+			scale: f32 = 0.06
+			offset: v2 = {-0.55, 0.5}
+			xy: v2 = ({cast(f32)x, cast(f32)y} - {cast(f32)tex.x / 2, cast(f32)tex.y / 2}) * 2.0
+			pos: v2 = offset + (xy / {cast(f32)tex.x, cast(f32)tex.x}) * scale
 			col: v3 = {0.0, 0.0, 0.0}
 
-			//col = {cast(f32)(x * 255) / cast(f32)tex.x, cast(f32)(y * 255) / cast(f32)tex.y, 0} // UV
-			// col = {cast(u8)(x % 255), cast(u8)(y % 255), 0}
-/*			
 			for aax: int = 0; aax < ANTIALIASING; aax += 1 {
 				for aay: int = 0; aay < ANTIALIASING; aay += 1 {
-					AAOFFSET :: ANTIALIASING / 2
-					pos: v2 = (xy + {cast(f32)aax - AAOFFSET, cast(f32)aay - AAOFFSET}) / v2{cast(f32)tex.x, cast(f32)tex.y}
-					samplepos: v2 = {-0.05, 0.6805} + (pos * zoom)
-					dist := mandelbrot_dist_func(iter_max, samplepos)
-					val := dist
-
-					col += {val, val, val}
+					offset: v2 = ({cast(f32)aax / cast(f32)tex.x, cast(f32)aay / cast(f32)tex.y} / cast(f32)ANTIALIASING) * scale
+					dist := mandelbrot_func(iter_max, pos + offset)
+					COLOR_OUTSIDE :: v3{10, 50, 90}
+					COLOR_INSIDE :: v3{10, 15, 15}
+					COLOR_BORDER :: v3{255, 255, 255}
+					COLOR_BLOOM :: v3{100, 185, 255}
+					t: f32 = 0.001 / (math.pow(dist, 3.0) + 0.01) * scale
+					col += dist <= 0.0 ? COLOR_INSIDE : (COLOR_BLOOM * t + COLOR_OUTSIDE * (1 - t)) + COLOR_BORDER * 0.4 / (math.pow(dist, 0.3) + 0.01) * scale
 				}
 			}
-*/
-			//col /= ANTIALIASING * ANTIALIASING
+			col /= ANTIALIASING * ANTIALIASING
 
-			dist := mandelbrot_func(iter_max, pos)
-			val := clamp(math.pow(4.0 * dist / zoom, 0.2), 0.0, 1.0) * 255;
-			col += {val, val, val}
-
-			tex.data[index + 0] = cast(u8)col[0]
-			tex.data[index + 1] = cast(u8)col[1]
-			tex.data[index + 2] = cast(u8)col[2]
+			tex.data[index + 0] = cast(u8)clamp(col[0], 0.0, 255.0)
+			tex.data[index + 1] = cast(u8)clamp(col[1], 0.0, 255.0)
+			tex.data[index + 2] = cast(u8)clamp(col[2], 0.0, 255.0)
 			index += 3
 		}
 		if y % 100 == 0 do fmt.println("row", y)
@@ -166,11 +159,6 @@ julia_set_fill_texture :: proc(iter_max: int, tex: texture) {
 
 
 
-serpinski_carpet_func :: proc(iter_max: int, pos: v2) -> f32 {
-	
-}
-
-
 
 main :: proc() {
 	size: int = RESOLUTION_X * RESOLUTION_Y * CHANNELS
@@ -185,8 +173,8 @@ main :: proc() {
 	mandelbrot_fill_texture(200, tex)
 	texture_save("./mandelbrot.jpg", tex)
 
-	julia_set_fill_texture(200, tex)
-	texture_save("./julia_set.jpg", tex)
+	//julia_set_fill_texture(200, tex)
+	//texture_save("./julia_set.jpg", tex)
 
 
 

@@ -1,12 +1,12 @@
 # sw_fractal
 ## tiny fractal software renderer
 
-## available fractals:
+## fractals:
 - Mandelbrot set
 - Julia set (TODO)
 - Serpinski carpet (TODO)
 
 ## images
-![](/mandelbrot.jpg)
-![](/julia_set.jpg)
-![](/serpinski_carpet.jpg)
+- Mandelbrot set
+![](/mandelbrot_red.jpg)
+![](/mandelbrot_fowers.jpg)
