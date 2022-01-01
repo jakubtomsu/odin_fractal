@@ -1,5 +1,4 @@
-# sw_fractal
-## tiny fractal software renderer
+## tiny fractal software renderer written in odin
 
 ## fractals:
 - only Mandelbrot set for now
