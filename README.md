@@ -2,9 +2,7 @@
 ## tiny fractal software renderer
 
 ## fractals:
-- Mandelbrot set
-- Julia set (TODO)
-- Serpinski carpet (TODO)
+- only Mandelbrot set for now
 
 ## images
 - Mandelbrot set
