@@ -161,13 +161,18 @@ julia_set_fill_texture :: proc(iter_max: int, tex: texture) {
 
 
 main :: proc() {
+
 	size: int = RESOLUTION_X * RESOLUTION_Y * CHANNELS
+
+	memallocted, error := mem.alloc(size, 64)
+
 	tex := texture{
 		x = RESOLUTION_X,
 		y = RESOLUTION_Y,
 		size = size,
-		data = cast([^]byte)mem.alloc(size, 64),
+		data = cast([^]byte) memallocted,
 	}
+
 	fmt.println("resolution =", []int{tex.x, tex.y})
 
 	mandelbrot_fill_texture(200, tex)
